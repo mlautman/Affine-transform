@@ -4,22 +4,17 @@ clear
 clc
 
 % Use practice assignment stuff
-addpath /Users/long/Box' Sync'/Study' Abroad'/PhD' Study'/PhD/TA/Spring2015/Grandchallenge2/solution_GC;
-addpath /Users/long/Box' Sync'/Study' Abroad'/PhD' Study'/PhD/TA/Spring2015/Grandchallenge2/solution_GC/NIFTI_20110921;
-addpath /Users/long/Box' Sync'/Study' Abroad'/PhD' Study'/PhD/TA/Spring2015/Grandchallenge2/solution_GC/solution_MATLAB_1;
-addpath /Users/long/Box' Sync'/Study' Abroad'/PhD' Study'/PhD/TA/Spring2015/Grandchallenge2/2D_SELECTED/train;
-cd /Users/long/Box' Sync'/Study' Abroad'/PhD' Study'/PhD/TA/Spring2015/Grandchallenge2/
 
 % Read a pair of nifti files
-[I1 sp1] = myReadNifti('sub006_mri.nii');
-[I2 sp2] = myReadNifti('sub009_mri.nii');
+[I1 sp1] = myReadNifti('./data/mri-hippocampus/sub006_mri.nii');
+[I2 sp2] = myReadNifti('./data/mri-hippocampus/sub009_mri.nii');
 I1 = squeeze(I1);
 I2 = squeeze(I2);
 sp1 = sp1(2:3);
 sp2 = sp2(2:3);
 
 % Load a segmentation image
-[S sp1] = myReadNifti('sub006_seg.nii');
+[S sp1] = myReadNifti('./data/mri-hippocampus/sub006_seg.nii');
 S = squeeze(S);
 sp1 = sp1(2:3);
 
