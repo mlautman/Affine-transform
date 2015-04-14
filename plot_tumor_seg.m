@@ -1,4 +1,4 @@
-function plot_seg(data)
+function plot_tumor_seg(data)
 close all;
 % plot
 figure(1)
