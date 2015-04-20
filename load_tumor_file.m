@@ -8,11 +8,22 @@ ext= {...
     '_seg.nii'...
 };
 
-pth = strsplit(dname,'/');
-if dname(length(dname)) == '/'
-    base = pth(length(pth)-1);
+
+
+if isunix()
+    pth = strsplit(dname,'/');
+    if dname(length(dname)) == '/'
+        base = pth(length(pth)-1);
+    else
+        base = pth(length(pth));
+    end
 else
-    base = pth(length(pth));
+    pth = strsplit(dname,'\');
+    if dname(length(dname)) == '\'
+        base = pth(length(pth)-1);
+    else
+        base = pth(length(pth));
+    end
 end
 
 % init struct 
