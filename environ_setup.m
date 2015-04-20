@@ -13,8 +13,5 @@ else
     addpath(genpath('.\solution_GC_2D\'));
     addpath(genpath('.\data\'));
     addpath(genpath('.\mrfcode\'));
-    cd maxflow\
-    make 
-    cd ..
 end    
 
