@@ -1,4 +1,4 @@
-function [mask,P] = RandomWalkerSeg7(datavector)
+function [mask,P] = RandomWalkerSeg(datavector)
 %Random Walker Algorithm for Segmentation Challenge
 %Image is the image as a matrix of intensities
 %Beta is a free parameter used in the weighting function
@@ -13,70 +13,65 @@ Npoints=xdim*ydim;
 % Define the edges connecting the points
 edges=edges4connected(xdim,ydim);
 
+%Preallocate the average
+
+%% Define the Weights from the Random Walker formulation
+
+%Calculate intensity differences
+Idiff=abs(sum((image(edges(:,1))-image(edges(:,2))),2));
+
+%Find the maximum difference value to use as the normalization constant rho
+rho=max(Idiff);
+
+%Define a small constant epsilon to improve calculations
+eps=10^-6; %Based on paper
+
+%% Assign labels from the seed
+
+% Find the number of seeds, which equals the number of labels
+sparseseed=sparse(seed);
+labels=unique(sparseseed(find(sparseseed>0)));
+labels=labels(labels>0);
+nlabels=length(labels);
+
+%Find Label Locations
+
+label1loc=find(sparseseed==1);
+label2loc=find(sparseseed==2);
+label3loc=find(sparseseed==3);
+
+clear sparseseed
 %% Define a vector of Betas (range determined by testing) for beta selection
 Betas=[90,95,100,111];
-%Preallocate the initial dicefactor as 0. This needs to be outside of the
-%loops to avoid extra calculations
-diceface0=0;
-for c=1:length(Betas)
-    Beta=Betas(c);
-    %% Define the Weights from the Random Walker formulation
+
+if nlabels==2
     
-    %Calculate intensity differences
-    Idiff=abs(sum((image(edges(:,1))-image(edges(:,2))),2));
-    
-    %Find the maximum difference value to use as the normalization constant rho
-    rho=max(Idiff)^2;
-    
-    %Define a small constant epsilon to improve calculations
-    eps=10^-6; %Based on paper
-    
-    %Define the weight function as described in the paper
-    wij=exp(-Beta/rho*(Idiff))+eps;
-    
-    clear Beta
-    clear rho
-    clear Idiff
-    clear eps
-    %% Calculate the sparse Laplacian matrix L with elements Lm, B, B', and Lu
-    
-    %Create the Entire W matrix by shaping it along the edges and use to
-    %calculate L
-    W=sparse([edges(:,1);edges(:,2)],[edges(:,2);edges(:,1)],[wij;wij],Npoints,Npoints);
-    L=sparse(diag(sum(W))-W);
-    
-    
-    %% Assign labels from the seed
-    
-    % Find the number of seeds, which equals the number of labels
-    sparseseed=sparse(seed);
-    labels=unique(sparseseed(find(sparseseed>0)));
-    labels=labels(labels>0);
-    nlabels=length(labels);
-    
-    %Let's try this instead--I think I Need to have the indices as the seed
-    %locations (the soods you were trying last night)
-    
-    label1loc=find(sparseseed==1);
-    label2loc=find(sparseseed==2);
-    label3loc=find(sparseseed==3);
-    
-    clear sparseseed
-    
-    % Define the matrix M which has elements msj=1 for s=j and zero elsewhere,
-    % where s and j are indices in the matrix. This matrix is used to separate
-    % B with the labels, so it should be an nxn diagonal matrix with n=nseeds
-    v=ones(1,nlabels);
-    M=diag(v);
-    M=sparse(M);
-    
-    clear v
-    
-    if nlabels==2
+    for c=1:length(Betas)
+        Beta=Betas(c);
+        %Define the weight function as described in the paper
+        wij=exp(-Beta/rho*(Idiff))+eps;
+        
+        %% Calculate the sparse Laplacian matrix L with elements Lm, B, B', and Lu
+        
+        %Create the Entire W matrix by shaping it along the edges and use to
+        %calculate L
+        W=sparse([edges(:,1);edges(:,2)],[edges(:,2);edges(:,1)],[wij;wij],Npoints,Npoints);
+        L=sparse(diag(sum(W))-W);
+        
+        % Define the matrix M which has elements msj=1 for s=j and zero elsewhere,
+        % where s and j are indices in the matrix. This matrix is used to separate
+        % B with the labels, so it should be an nxn diagonal matrix with n=nseeds
+        v=ones(1,nlabels);
+        M=diag(v);
+        M=sparse(M);
+        
+        clear v
+        diceface0=0;
         for i=1:length(label1loc)
             for j=length(label2loc)
+                
                 seedindex=[label1loc(i),label2loc(j)];
-                %seedindex=[label1loc(50),label2loc(50),label3loc(100)];
+                
                 
                 %% Calculate BT*M (The Right Hand Side of the Equation Lu*x=BT*M).
                 %BT=-L(columnns outside the label index evaluated at each label)
@@ -132,18 +127,42 @@ for c=1:length(Betas)
                     %Update average dice0
                     diceface0=dicefac;
                 end
+                
+                
             end
         end
-        
     end
-    
-    if nlabels==3
-        %seedindex=[label1loc(round(length(label1loc)/2)),label2loc(round(length(label2loc)/2)),label3loc(round(length(label3loc)/2))];
+end
+
+if nlabels==3
+    Betas=[90,95,100,111];
+    for c=1:length(Betas)
+        Beta=Betas(c);
+        %Define the weight function as described in the paper
+        wij=exp(-Beta/rho*(Idiff))+eps;
+        
+        %% Calculate the sparse Laplacian matrix L with elements Lm, B, B', and Lu
+        
+        %Create the Entire W matrix by shaping it along the edges and use to
+        %calculate L
+        W=sparse([edges(:,1);edges(:,2)],[edges(:,2);edges(:,1)],[wij;wij],Npoints,Npoints);
+        L=sparse(diag(sum(W))-W);
+        
+        % Define the matrix M which has elements msj=1 for s=j and zero elsewhere,
+        % where s and j are indices in the matrix. This matrix is used to separate
+        % B with the labels, so it should be an nxn diagonal matrix with n=nseeds
+        v=ones(1,nlabels);
+        M=diag(v);
+        M=sparse(M);
+        
+        clear v
+        
+        
+        diceface0=0;
         for i=1:length(label1loc)
             for j=length(label2loc)
                 for k=length(label3loc)
                     seedindex=[label1loc(i),label2loc(j),label3loc(k)];
-                    %seedindex=[label1loc(50),label2loc(50),label3loc(100)];
                     
                     %% Calculate BT*M (The Right Hand Side of the Equation Lu*x=BT*M).
                     %BT=-L(columnns outside the label index evaluated at each label)
@@ -206,6 +225,7 @@ for c=1:length(Betas)
         end
     end
 end
+
 %Convert P from sparse to full
 P=full(P);
 P=reshape(P, [xdim,ydim,nlabels]);
