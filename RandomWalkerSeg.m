@@ -1,11 +1,18 @@
-function [mask,P] = RandomWalkerSeg(datavector)
+function [mask,P] = RandomWalkerSeg8(datavector)
 %Random Walker Algorithm for Segmentation Challenge
 %Image is the image as a matrix of intensities
 %Beta is a free parameter used in the weighting function
 warning('off','all')
+
 %% Define the Lattice Structure based on the size of the Image
 image=datavector.img;
-seed=datavector.seed;
+if exist('datavector.seed')==1
+    seed=datavector.seed;
+else
+    seedlabeling=GMM_fit(datavector);
+    seed=gen_img_from_labels(datavector, seedlabeling);
+end
+
 % Obtain the dimensions of the image
 [xdim,ydim,zdim]=size(image);
 Npoints=xdim*ydim;
@@ -249,7 +256,7 @@ if nlabels==3
     [a2,b2]=ind2sub([240 240],seedindex(2));
     [a3,b3]=ind2sub([240 240],seedindex(3));
     subplot(2,2,1)
-    imagesc(datavector.seed);colormap('gray');hold on;plot(b1,a1,'g.','MarkerSize',24);plot(b2,a2,'b.','MarkerSize',24);plot(b3,a3,'r.','MarkerSize',24);
+    imagesc(seed);colormap('gray');hold on;plot(b1,a1,'g.','MarkerSize',24);plot(b2,a2,'b.','MarkerSize',24);plot(b3,a3,'r.','MarkerSize',24);
     title('Seeds')
     subplot(2,2,2)
     imagesc(image(:,:,1));colormap('gray');hold on;plot(b1,a1,'g.','MarkerSize',24);plot(b2,a2,'b.','MarkerSize',24);plot(b3,a3,'r.','MarkerSize',24);
