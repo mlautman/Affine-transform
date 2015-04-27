@@ -23,7 +23,7 @@ for j = 1:12
     % Compute the total variance
     var = sum(dmin(find(im > 0)));
     % Print the means
-    fprintf('Iter %2d; TICV = %e; Means are %f %f %f\n', j, var, mu);
+%     fprintf('Iter %2d; TICV = %e; Means are %f %f %f\n', j, var, mu);
     % Compute the new means
     for i = 1:3
         mu(i) = mean(im(find(seg==i)));
@@ -62,9 +62,20 @@ for it = 1:20
             sum(Pik(:,k)));
     end
     % Print the means
-    fprintf('Iter %2d; al = [%f %f %f]; mu = [%f %f %f]; sg = [%f %f %f]\n', it, al, mu, sg);
+%     fprintf('Iter %2d; al = [%f %f %f]; mu = [%f %f %f]; sg = [%f %f %f]\n', it, al, mu, sg);
 end
 
+Plot the three probability maps
+% figure(1);
+clf
+for k = 1:3
+    imp = zeros(size(im));
+    imp(nz) = Pik(:,k);
+    subplot(1,3,k);
+    imagesc(imp);
+    axis image;
+    colormap gray;
+end
 
 %% MRF: compute the initial segmentation from the GMM
 % Change made: Initial input is based on GMM
@@ -115,7 +126,7 @@ for iter=1:20
             nflip = nflip + 1;
         end
     end 
-    fprintf('Iter %02d: Flipped %d labels\n', iter, nflip);    
+%     fprintf('Iter %02d: Flipped %d labels\n', iter, nflip);    
     if(nflip == 0)
         break
     end        
