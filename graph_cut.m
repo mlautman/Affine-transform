@@ -1,14 +1,13 @@
-function [flow,labels] = graph_cut(data_vec, idx, labels)
-    weight = 100;
+function [flow,labels] = graph_cut(data_vec, idx, labels, weight)
     [C,D] = size(data_vec.C_ave);
 
     [height, width, depth] = size(data_vec.img);
     N = height*width;
     E = edges4connected(height,width);
-    V = zeros(size(E,1),1);
+    V = eps .* ones(size(E,1),1);
     for i =1:depth
         im_i = squeeze(data_vec.img(:,:,1));
-        V = V + abs(im_i(E(:,1)) - im_i(E(:,2))) + eps;
+        V = V + abs(im_i(E(:,1)) - im_i(E(:,2))) ;
     end
     A = sparse(E(:,1), E(:,2), V, N, N, 4*N);
     

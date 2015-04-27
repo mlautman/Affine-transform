@@ -4,7 +4,7 @@ avedist=[];
 hausdist=[];
 dice = [];
 % %  Need to loop over number of regions in img
-for k = 1:length(unique(gtr))
+for k = 1:length(unique(gtr))-1
     set1 = find(gtr == k);
     data1 = zeros(size(gtr));
     data1(set1) = 1;
@@ -15,7 +15,7 @@ for k = 1:length(unique(gtr))
 
     GSplus = data1+data2;
     GSintersect = find(GSplus == 2);
-    dice =[dice; k, 2*length(GSintersect)/(sum(sum((data1))) + sum(sum(data2)))];
+    dice =[dice; 2*length(GSintersect)/(sum(sum((data1))) + sum(sum(data2)))];
        
     data1 = edge(data1);
     data2 = edge(data2);
@@ -34,8 +34,8 @@ for k = 1:length(unique(gtr))
         dist21(ijk) = dist21(i(ijk), j(ijk));
     end
     
-    avedist = [avedist; k, mean([mean(dist12), mean(dist21)])];
-    hausdist = [hausdist; k, mean([max(dist12), max(dist21)])];
+    avedist = [avedist;  mean([mean(dist12), mean(dist21)])];
+    hausdist = [hausdist;  mean([max(dist12), max(dist21)])];
     
 end
 
