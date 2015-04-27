@@ -4,7 +4,7 @@ avedist=[];
 hausdist=[];
 dice = [];
 % %  Need to loop over number of regions in img
-for k = 1:length(unique(gtr))
+for k = 1:length(unique(gtr))-1
     data1 = zeros(size(gtr));
     data1(find(gtr == k)) = 1;
     
