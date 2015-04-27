@@ -1,3 +1,5 @@
-function [idx, c] = kmeans_fit(data_vec, k)
-    [idx, c] = kmeans(data_vec.X, k, 'Start', data_vec.C_ave);
+function [idx, c] = kmeans_fit(data_vec, k, scaling)
+    X =  bsxfun(@times, data_vec.X, scaling);
+    start = bsxfun(@times, data_vec.C_ave, scaling);
+    [idx, c] = kmeans(X, k, 'Start', start);
 end

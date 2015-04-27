@@ -28,10 +28,10 @@ for k = 1:length(unique(gtr))
     end
     
 % %     Distance from set 2 to set 1
-    dist12 = bwdist(data2);
+    dist21 = bwdist(data2);
     [i,j] = find(data1==k);
     for ijk = 1:length(i)
-        dist21(ijk) = dist12(i(ijk), j(ijk));
+        dist21(ijk) = dist21(i(ijk), j(ijk));
     end
     
     avedist = [avedist; k, mean([mean(dist12), mean(dist21)])];

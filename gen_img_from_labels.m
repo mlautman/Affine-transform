@@ -6,8 +6,9 @@ function img = gen_img_from_labels(data_vec, idx)
     img = zeros(max_h, max_w);
     for i = 1:length(unique(idx))
         pts = find(idx==i);
-        for k = 1:length(pts)
-            img(data_vec.X(pts(k),y_v), data_vec.X(pts(k),x_v))=i;
-        end
+        ind_hit = sub2ind([max_h, max_w], ...
+            data_vec.X(pts, y_v), ...
+            data_vec.X(pts, x_v));
+        img(ind_hit)=i;
     end
 end
