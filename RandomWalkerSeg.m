@@ -1,4 +1,4 @@
-function [mask,P] = RandomWalkerSeg8(datavector)
+function [mask,P] = RandomWalkerSeg(datavector)
 %Random Walker Algorithm for Segmentation Challenge
 %Image is the image as a matrix of intensities
 %Beta is a free parameter used in the weighting function
@@ -11,6 +11,7 @@ if exist('datavector.seed')==1
 else
     seedlabeling=GMM_fit(datavector);
     seed=gen_img_from_labels(datavector, seedlabeling);
+    seed(seed>2)=0;
 end
 
 % Obtain the dimensions of the image
@@ -117,7 +118,7 @@ if nlabels==2
                 
                 %When looking at the tumor file, we want to not look at the "other tissues"
                 %area, so set those values to 0
-                masknew(masknew>2)=0;
+                masknew(masknew>1)=0;
                 gtr = gen_img_from_labels(datavector, datavector.seg);
                 seg = gen_img_from_labels(datavector, masknew);
                 [~,~,dice]=seg_eval(gtr,seg);
@@ -126,7 +127,8 @@ if nlabels==2
                 %the dice scores. If the average dice score increases, it
                 %keeps the mask from the iteration, otherwise it is not
                 %saved
-                dicefac=(dice(1,2)+dice(2,2));
+                
+                dicefac=(dice(1,2));
                 
                 if dicefac>diceface0
                     mask=masknew;
@@ -243,7 +245,7 @@ if nlabels==2
     [a1,b1]=ind2sub([240 240],seedindex(1));
     [a2,b2]=ind2sub([240 240],seedindex(2));
     subplot(2,2,1)
-    imagesc(datavector.seed);colormap('gray');hold on;plot(b1,a1,'g.','MarkerSize',24);plot(b2,a2,'b.','MarkerSize',24);
+    imagesc(seed);colormap('gray');hold on;plot(b1,a1,'g.','MarkerSize',24);plot(b2,a2,'b.','MarkerSize',24);
     subplot(2,2,2)
     imagesc(image(:,:,1));colormap('gray');hold on;plot(b1,a1,'g.','MarkerSize',24);plot(b2,a2,'b.','MarkerSize',24);
     subplot(2,2,3)
