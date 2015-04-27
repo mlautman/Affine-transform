@@ -6,7 +6,30 @@ for i=1:3
     mu(i) = mean(im(find(im==i)));
 %     sd(i) = std(im(find(im==i)));
 end
+%% K-Means Clustering
 
+% For k-means we need to define initial means
+% mu = [50 100 150];
+
+% Iterate 
+for j = 1:12
+    
+    % For each intensity value, compute square distance to each mean
+    dst = zeros(size(im,1), size(im,2), 3);
+    for i = 1:3
+           dst(:,:,i) = (im - mu(i)).^2;
+    end
+    % Assign each non-background pixel to the closest cluster
+    [dmin seg] = min(dst, [], 3);
+    seg(find(im == 0)) = 0;
+    % Compute the total variance
+    var = sum(dmin(find(im > 0)));
+    % Compute the new means
+    for i = 1:3
+        mu(i) = mean(im(find(seg==i)));
+    end
+    
+end
 %% Mixture Modeling
 
 % Initialize alpha, mu and sigma for each class
