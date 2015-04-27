@@ -1,7 +1,5 @@
 function X = my_icm2(im)
 
-im(im>2) = 0;
-
 for i=1:3
     mu(i) = mean(im(find(im==i)));
 %     sd(i) = std(im(find(im==i)));
