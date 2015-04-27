@@ -1,6 +1,6 @@
-function X = my_icm(im)
+function X = my_icm2(im)
 
-im(find(im==4)) = 0;
+im(im>2) = 0;
 
 for i=1:3
     mu(i) = mean(im(find(im==i)));
@@ -34,7 +34,7 @@ end
 
 % Initialize alpha, mu and sigma for each class
 al = [0.33 0.33 0.34];
-mu=[1,2,3];
+mu = [1, 2, 3];
 sg = [10 10 10];
 %%%%%%%%%%%%%% Used mu from initial GMM input for better results
 % Get the array of all non-zero voxels
