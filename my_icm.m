@@ -34,6 +34,7 @@ end
 
 % Initialize alpha, mu and sigma for each class
 al = [0.33 0.33 0.34];
+mu=[1,2,3];
 sg = [10 10 10];
 %%%%%%%%%%%%%% Used mu from initial GMM input for better results
 % Get the array of all non-zero voxels
