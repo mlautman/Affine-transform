@@ -23,7 +23,6 @@ for k = 1:length(unique(gtr))
 % %     Distance from set 1 to set 2
     dist12a = bwdist(data1);
     [i,j] = find(data2==k);
-    dist12=[];
     for ijk = 1:length(i)
         dist12(ijk) = dist12a(i(ijk), j(ijk));
     end
@@ -31,7 +30,6 @@ for k = 1:length(unique(gtr))
 % %     Distance from set 2 to set 1
     dist21a = bwdist(data2);
     [i,j] = find(data1==k);
-    dist21=[];
     for ijk = 1:length(i)
         dist21(ijk) = dist21a(i(ijk), j(ijk));
     end
