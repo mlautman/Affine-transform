@@ -246,12 +246,16 @@ if nlabels==2
     [a2,b2]=ind2sub([240 240],seedindex(2));
     subplot(2,2,1)
     imagesc(seed);colormap('gray');hold on;plot(b1,a1,'g.','MarkerSize',24);plot(b2,a2,'b.','MarkerSize',24);
+    title('Seeds')
     subplot(2,2,2)
     imagesc(image(:,:,1));colormap('gray');hold on;plot(b1,a1,'g.','MarkerSize',24);plot(b2,a2,'b.','MarkerSize',24);
+    title('Image')
     subplot(2,2,3)
     imagesc(mask);colormap('gray');hold on;plot(b1,a1,'g.','MarkerSize',24);plot(b2,a2,'b.','MarkerSize',24);
+    title('Algorithm Segmentation')
     subplot(2,2,4)
     imagesc(datavector.seg);colormap('gray');hold on;plot(b1,a1,'g.','MarkerSize',24);plot(b2,a2,'b.','MarkerSize',24);
+    title('True Segmentation')
 end
 if nlabels==3
     [a1,b1]=ind2sub([240 240],seedindex(1));
