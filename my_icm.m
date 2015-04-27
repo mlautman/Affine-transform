@@ -7,34 +7,10 @@ for i=1:3
 %     sd(i) = std(im(find(im==i)));
 end
 
-%% K-Means Clustering
-% For k-means we need to define initial means
-% mu = [50 100 150];
-% Iterate 
-for j = 1:12
-        % For each intensity value, compute square distance to each mean
-    dst = zeros(size(im,1), size(im,2), 3);
-    for i = 1:3
-           dst(:,:,i) = (im - mu(i)).^2;
-    end    
-    % Assign each non-background pixel to the closest cluster
-    [dmin seg] = min(dst, [], 3);
-    seg(find(im == 0)) = 0;
-    % Compute the total variance
-    var = sum(dmin(find(im > 0)));
-    % Print the means
-%     fprintf('Iter %2d; TICV = %e; Means are %f %f %f\n', j, var, mu);
-    % Compute the new means
-    for i = 1:3
-        mu(i) = mean(im(find(seg==i)));
-    end    
-end
-
 %% Mixture Modeling
 
 % Initialize alpha, mu and sigma for each class
 al = [0.33 0.33 0.34];
-% mu = [50 100 150];
 sg = [10 10 10];
 %%%%%%%%%%%%%% Used mu from initial GMM input for better results
 % Get the array of all non-zero voxels
@@ -61,21 +37,8 @@ for it = 1:20
             sum(Pik(:,k) .* (X - mu(k)) .* (X - mu(k))) / ...
             sum(Pik(:,k)));
     end
-    % Print the means
-%     fprintf('Iter %2d; al = [%f %f %f]; mu = [%f %f %f]; sg = [%f %f %f]\n', it, al, mu, sg);
 end
 
-% Plot the three probability maps
-figure(1);
-clf
-for k = 1:3
-    imp = zeros(size(im));
-    imp(nz) = Pik(:,k);
-    subplot(1,3,k);
-    imagesc(imp);
-    axis image;
-    colormap gray;
-end
 
 %% MRF: compute the initial segmentation from the GMM
 % Change made: Initial input is based on GMM
@@ -131,13 +94,6 @@ for iter=1:20
         break
     end        
 end
-
-% Show final segmentation
-clf;
-figure
-subplot(1,2,1); imagesc(X); axis image; colormap gray; title('ICM');
-subplot(1,2,2); imagesc(X0); axis image; colormap gray; title('Input');
-
 
 end
 
