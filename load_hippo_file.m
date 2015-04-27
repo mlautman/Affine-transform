@@ -5,12 +5,20 @@ ext= {...
     '_mri.nii', ...
     '_seg.nii'...
 };
+data.fid = fid;
+
+if str2num(fid(4:length(fid)))<=20
+    data.type = 'train';
+else 
+    data.type = 'test';
+end
 
 if isunix()
-    dname = './data/mri-hippocampus/';
+    dname = strcat('./data/mri-hippocampus/',data.type,'/');
 else
-    dname = '.\data\mri-hippocampus\';
+    dname = strcat('.\data\mri-hippocampus\',data.type,'\');
 end
+
 % init struct 
 fpath = char(strcat(dname, fid, ext{1}));
 [img, spacing] = myReadNifti(fpath);
@@ -23,7 +31,11 @@ data.spacing = spacing;
 fpath = char(strcat(dname, fid, ext{1}));
 [data.img(:,:), ~] = myReadNifti(fpath);  
 
-fpath = char(strcat(dname, fid, ext{2}));
-[data.seg(:,:), ~] = myReadNifti(fpath);  
+if isequal(data.type, 'train')
+    fpath = char(strcat(dname, fid, ext{2}));
+    [data.seg(:,:), ~] = myReadNifti(fpath);  
+else
+    data.seg(:,:) = zeros(size(data.img));  
+end
 
 end
