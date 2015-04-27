@@ -5,7 +5,7 @@ close all;
 mask = 1:4;
 weight = 5e1;
 
-f_weights = [.2,.1, .2,.1,1,1];
+f_weights = [.5,.1, .2,.1,1,1];
 %%
 train_fid = {...
     'sub001', 'sub004', 'sub008', 'sub012', 'sub015', 'sub002', 'sub005',...
