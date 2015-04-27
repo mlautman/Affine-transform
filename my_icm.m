@@ -65,17 +65,6 @@ for it = 1:20
     fprintf('Iter %2d; al = [%f %f %f]; mu = [%f %f %f]; sg = [%f %f %f]\n', it, al, mu, sg);
 end
 
-% Plot the three probability maps
-figure(1);
-clf
-for k = 1:3
-    imp = zeros(size(im));
-    imp(nz) = Pik(:,k);
-    subplot(1,3,k);
-    imagesc(imp);
-    axis image;
-    colormap gray;
-end
 
 %% MRF: compute the initial segmentation from the GMM
 % Change made: Initial input is based on GMM
