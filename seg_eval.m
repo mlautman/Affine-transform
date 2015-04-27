@@ -21,17 +21,17 @@ for k = 1:length(unique(gtr))-1
     data2 = edge(data2);
     
 % %     Distance from set 1 to set 2
-    dist12 = bwdist(data1);
+    dist12a = bwdist(data1);
     [i,j] = find(data2==k);
     for ijk = 1:length(i)
-        dist12(ijk) = dist12(i(ijk), j(ijk));
+        dist12(ijk) = dist12a(i(ijk), j(ijk));
     end
     
 % %     Distance from set 2 to set 1
-    dist21 = bwdist(data2);
+    dist21a = bwdist(data2);
     [i,j] = find(data1==k);
     for ijk = 1:length(i)
-        dist21(ijk) = dist21(i(ijk), j(ijk));
+        dist21(ijk) = dist21a(i(ijk), j(ijk));
     end
     
     avedist = [avedist;  mean([mean(dist12), mean(dist21)])];
